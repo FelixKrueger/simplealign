@@ -81,10 +81,25 @@ workflow SIMPLEALIGN {
    //
     // SUBWORKFLOW: Read QC and trim adapters
     //
+
+    // take:
+    // reads             // channel: [ val(meta), [ reads ] ]
+    // skip_fastqc       // boolean: true/false
+    // with_umi          // boolean: true/false
+    // skip_umi_extract  // boolean: true/false
+    // skip_trimming     // boolean: true/false
+    // umi_discard_read  // integer: 0, 1 or 2
+    // min_trimmed_reads // integer: > 0
+
     FASTQ_FASTQC_UMITOOLS_TRIMGALORE (
         INPUT_CHECK.out.reads,
-        params.skip_fastqc || params.skip_qc,
-        params.skip_trimming
+        params.skip_fastqc,
+        false,                      // with_umi          // boolean: true/false
+        true,                       // skip_umi_extract  // boolean: true/false
+        params.skip_trimming,
+        1                           // umi_discard_read  // integer: 0, 1 or 2
+        1000                        // min_trimmed_reads // integer: > 0
+        
     )
     ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.versions)
 

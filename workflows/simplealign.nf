@@ -134,12 +134,12 @@ workflow SIMPLEALIGN {
         false,
         params.genomes[params.genome]['fasta']
     )
-    ch_genome_bam        = ALIGN_BOWTIE2.out.bam
-    ch_genome_bam_index  = ALIGN_BOWTIE2.out.bai
-    ch_samtools_stats    = ALIGN_BOWTIE2.out.stats
-    ch_samtools_flagstat = ALIGN_BOWTIE2.out.flagstat
-    ch_samtools_idxstats = ALIGN_BOWTIE2.out.idxstats
-    ch_versions = ch_versions.mix(ALIGN_BOWTIE2.out.versions.first())
+    ch_genome_bam        = FASTQ_ALIGN_BOWTIE2.out.bam
+    ch_genome_bam_index  = FASTQ_ALIGN_BOWTIE2.out.bai
+    ch_samtools_stats    = FASTQ_ALIGN_BOWTIE2.out.stats
+    ch_samtools_flagstat = FASTQ_ALIGN_BOWTIE2.out.flagstat
+    ch_samtools_idxstats = FASTQ_ALIGN_BOWTIE2.out.idxstats
+    ch_versions = ch_versions.mix(FASTQ_ALIGN_BOWTIE2.out.versions.first())
     
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')

@@ -78,7 +78,7 @@ workflow SIMPLEALIGN {
     // ! There is currently no tooling to help you write a sample sheet schema
 
 
-   //
+    //
     // SUBWORKFLOW: Read QC and trim adapters
     //
 
@@ -100,7 +100,6 @@ workflow SIMPLEALIGN {
         1,                           // umi_discard_read  // integer: 0, 1 or 2
         1000                        // min_trimmed_reads // integer: > 0
     ) 
-    
     ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.versions)
 
 
@@ -112,11 +111,8 @@ workflow SIMPLEALIGN {
     // )
     // ch_versions = ch_versions.mix(FASTQC.out.versions.first())
 
-    // CUSTOM_DUMPSOFTWAREVERSIONS (
-    //     ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    // )
-
-     //
+    
+    //
     // SUBWORKFLOW: Alignment with Bowtie2 & BAM QC
     //
 
@@ -129,8 +125,8 @@ workflow SIMPLEALIGN {
     // save_unaligned    // val
     // sort_bam          // val
     // ch_fasta          // channel: /path/to/reference.fasta
-
-
+    FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads.view()
+    
     FASTQ_ALIGN_BOWTIE2 (
         FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads,
         params.genome['bowtie2_index'], // assuming the index has been built already
@@ -145,6 +141,11 @@ workflow SIMPLEALIGN {
     ch_samtools_idxstats = ALIGN_BOWTIE2.out.idxstats
     ch_versions = ch_versions.mix(ALIGN_BOWTIE2.out.versions.first())
     
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    )
+
+
     //
     // MODULE: MultiQC
     //

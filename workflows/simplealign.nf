@@ -129,10 +129,10 @@ workflow SIMPLEALIGN {
     
     FASTQ_ALIGN_BOWTIE2 (
         FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads,
-        params.genome['bowtie2'], // assuming the index has been built already
+        params.genomes[params.genome]['bowtie2'], // assuming the index has been built already
         params.save_unaligned,
         false,
-        params.genome['fasta']
+        params.genomes[params.genome]['fasta']
     )
     ch_genome_bam        = ALIGN_BOWTIE2.out.bam
     ch_genome_bam_index  = ALIGN_BOWTIE2.out.bai

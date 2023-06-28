@@ -74,6 +74,18 @@ workflow SIMPLEALIGN {
     // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
     // ! There is currently no tooling to help you write a sample sheet schema
 
+
+   //
+    // SUBWORKFLOW: Read QC and trim adapters
+    //
+    FASTQC_TRIMGALORE (
+        INPUT_CHECK.out.reads,
+        params.skip_fastqc || params.skip_qc,
+        params.skip_trimming
+    )
+    ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
+
+
     //
     // MODULE: Run FastQC
     //

@@ -97,10 +97,10 @@ workflow SIMPLEALIGN {
         false,                      // with_umi          // boolean: true/false
         true,                       // skip_umi_extract  // boolean: true/false
         params.skip_trimming,
-        1                           // umi_discard_read  // integer: 0, 1 or 2
+        1,                           // umi_discard_read  // integer: 0, 1 or 2
         1000                        // min_trimmed_reads // integer: > 0
-        
-    )
+    ) 
+    
     ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.versions)
 
 

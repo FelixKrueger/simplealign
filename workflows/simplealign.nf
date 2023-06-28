@@ -125,11 +125,11 @@ workflow SIMPLEALIGN {
     // save_unaligned    // val
     // sort_bam          // val
     // ch_fasta          // channel: /path/to/reference.fasta
-    FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads.view()
+    // FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads.view()
     
     FASTQ_ALIGN_BOWTIE2 (
         FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads,
-        params.genome['bowtie2_index'], // assuming the index has been built already
+        params.genome['bowtie2'], // assuming the index has been built already
         params.save_unaligned,
         false,
         params.genome['fasta']

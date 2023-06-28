@@ -107,14 +107,43 @@ workflow SIMPLEALIGN {
     //
     // MODULE: Run FastQC
     //
-    FASTQC (
-        INPUT_CHECK.out.reads
-    )
-    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
+    // FASTQC (
+    //     INPUT_CHECK.out.reads
+    // )
+    // ch_versions = ch_versions.mix(FASTQC.out.versions.first())
 
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    )
+    // CUSTOM_DUMPSOFTWAREVERSIONS (
+    //     ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    // )
+
+     //
+    // SUBWORKFLOW: Alignment with Bowtie2 & BAM QC
+    //
+
+    // workflow FASTQ_ALIGN_BOWTIE2 {
+    // take:
+    // ch_reads          // channel: [ val(meta), [ reads ] ]
+    // ch_index          // channel: /path/to/bowtie2/index/
+    // save_unaligned    // val
+    // sort_bam          // val
+    // ch_fasta          // channel: /path/to/reference.fasta
+
+    if (params.aligner == 'bowtie2') {
+        FASTQ_ALIGN_BOWTIE2 (
+            FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads,
+            params.genome['bowtie2_index'],
+            //PREPARE_GENOME.out.bowtie2_index,
+            params.save_unaligned,
+            false,
+            params.genome['fasta']
+        )
+        ch_genome_bam        = ALIGN_BOWTIE2.out.bam
+        ch_genome_bam_index  = ALIGN_BOWTIE2.out.bai
+        ch_samtools_stats    = ALIGN_BOWTIE2.out.stats
+        ch_samtools_flagstat = ALIGN_BOWTIE2.out.flagstat
+        ch_samtools_idxstats = ALIGN_BOWTIE2.out.idxstats
+        ch_versions = ch_versions.mix(ALIGN_BOWTIE2.out.versions.first())
+    }
 
     //
     // MODULE: MultiQC

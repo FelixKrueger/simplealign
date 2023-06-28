@@ -120,6 +120,8 @@ workflow SIMPLEALIGN {
     // SUBWORKFLOW: Alignment with Bowtie2 & BAM QC
     //
 
+    // This is what the subworkflow takes as arguments:
+
     // workflow FASTQ_ALIGN_BOWTIE2 {
     // take:
     // ch_reads          // channel: [ val(meta), [ reads ] ]
@@ -128,23 +130,21 @@ workflow SIMPLEALIGN {
     // sort_bam          // val
     // ch_fasta          // channel: /path/to/reference.fasta
 
-    if (params.aligner == 'bowtie2') {
-        FASTQ_ALIGN_BOWTIE2 (
-            FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads,
-            params.genome['bowtie2_index'],
-            //PREPARE_GENOME.out.bowtie2_index,
-            params.save_unaligned,
-            false,
-            params.genome['fasta']
-        )
-        ch_genome_bam        = ALIGN_BOWTIE2.out.bam
-        ch_genome_bam_index  = ALIGN_BOWTIE2.out.bai
-        ch_samtools_stats    = ALIGN_BOWTIE2.out.stats
-        ch_samtools_flagstat = ALIGN_BOWTIE2.out.flagstat
-        ch_samtools_idxstats = ALIGN_BOWTIE2.out.idxstats
-        ch_versions = ch_versions.mix(ALIGN_BOWTIE2.out.versions.first())
-    }
 
+    FASTQ_ALIGN_BOWTIE2 (
+        FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads,
+        params.genome['bowtie2_index'], // assuming the index has been built already
+        params.save_unaligned,
+        false,
+        params.genome['fasta']
+    )
+    ch_genome_bam        = ALIGN_BOWTIE2.out.bam
+    ch_genome_bam_index  = ALIGN_BOWTIE2.out.bai
+    ch_samtools_stats    = ALIGN_BOWTIE2.out.stats
+    ch_samtools_flagstat = ALIGN_BOWTIE2.out.flagstat
+    ch_samtools_idxstats = ALIGN_BOWTIE2.out.idxstats
+    ch_versions = ch_versions.mix(ALIGN_BOWTIE2.out.versions.first())
+    
     //
     // MODULE: MultiQC
     //

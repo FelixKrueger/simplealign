@@ -46,7 +46,7 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC                      }      from '../modules/nf-core/fastqc/main'
+// include { FASTQC                      }      from '../modules/nf-core/fastqc/main'
 include { MULTIQC                     }      from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS }      from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore/main'
@@ -125,21 +125,21 @@ workflow SIMPLEALIGN {
     // save_unaligned    // val
     // sort_bam          // val
     // ch_fasta          // channel: /path/to/reference.fasta
-    // FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads.view()
+    FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads.view()
     
-    FASTQ_ALIGN_BOWTIE2 (
-        FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads,
-        params.genomes[params.genome]['bowtie2'], // assuming the index has been built already
-        params.save_unaligned,
-        false,
-        params.genomes[params.genome]['fasta']
-    )
-    ch_genome_bam        = FASTQ_ALIGN_BOWTIE2.out.bam
-    ch_genome_bam_index  = FASTQ_ALIGN_BOWTIE2.out.bai
-    ch_samtools_stats    = FASTQ_ALIGN_BOWTIE2.out.stats
-    ch_samtools_flagstat = FASTQ_ALIGN_BOWTIE2.out.flagstat
-    ch_samtools_idxstats = FASTQ_ALIGN_BOWTIE2.out.idxstats
-    ch_versions = ch_versions.mix(FASTQ_ALIGN_BOWTIE2.out.versions.first())
+    // FASTQ_ALIGN_BOWTIE2 (
+    //     FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads,
+    //     params.genomes[params.genome]['bowtie2'], // assuming the index has been built already
+    //     params.save_unaligned,
+    //     false,
+    //     params.genomes[params.genome]['fasta']
+    // )
+    // ch_genome_bam        = FASTQ_ALIGN_BOWTIE2.out.bam
+    // ch_genome_bam_index  = FASTQ_ALIGN_BOWTIE2.out.bai
+    // ch_samtools_stats    = FASTQ_ALIGN_BOWTIE2.out.stats
+    // ch_samtools_flagstat = FASTQ_ALIGN_BOWTIE2.out.flagstat
+    // ch_samtools_idxstats = FASTQ_ALIGN_BOWTIE2.out.idxstats
+    // ch_versions = ch_versions.mix(FASTQ_ALIGN_BOWTIE2.out.versions.first())
     
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')

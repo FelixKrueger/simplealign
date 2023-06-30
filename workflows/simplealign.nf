@@ -128,19 +128,19 @@ workflow SIMPLEALIGN {
     
     //FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads.view()
     
-    FASTQ_ALIGN_BOWTIE2 (
-        FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads,
-        params.genomes[params.genome]['bowtie2'], // assuming the index has been built already
-        params.save_unaligned,
-        false,
-        params.genomes[params.genome]['fasta']
-    )
+    // FASTQ_ALIGN_BOWTIE2 (
+    //     FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads,
+    //     params.genomes[params.genome]['bowtie2'], // assuming the index has been built already
+    //     params.save_unaligned,
+    //     false,
+    //     params.genomes[params.genome]['fasta']
+    // )
     // ch_genome_bam        = FASTQ_ALIGN_BOWTIE2.out.bam
     // ch_genome_bam_index  = FASTQ_ALIGN_BOWTIE2.out.bai
     // ch_samtools_stats    = FASTQ_ALIGN_BOWTIE2.out.stats
     // ch_samtools_flagstat = FASTQ_ALIGN_BOWTIE2.out.flagstat
     // ch_samtools_idxstats = FASTQ_ALIGN_BOWTIE2.out.idxstats
-    ch_versions = ch_versions.mix(FASTQ_ALIGN_BOWTIE2.out.versions.first())
+    //ch_versions = ch_versions.mix(FASTQ_ALIGN_BOWTIE2.out.versions.first())
     
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')

@@ -50,7 +50,7 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 include { MULTIQC                     }      from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS }      from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE } from '../subworkflows/nf-core/fastq_fastqc_umitools_trimgalore/main'
-// include { FASTQ_ALIGN_BOWTIE2 }              from '../subworkflows/nf-core/fastq_align_bowtie2/main'
+include { FASTQ_ALIGN_BOWTIE2 }              from '../subworkflows/nf-core/fastq_align_bowtie2/main'
 
 
 /*

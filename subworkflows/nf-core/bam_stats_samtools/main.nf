@@ -20,8 +20,8 @@ workflow BAM_STATS_SAMTOOLS {
     // ch_bam_bai.view()
     // ch_fasta.view()
 
-    // SAMTOOLS_STATS ( ch_bam_bai, ch_fasta )
-    // ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions)
+    SAMTOOLS_STATS ( ch_bam_bai, ch_fasta )
+    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions)
 
     SAMTOOLS_FLAGSTAT ( ch_bam_bai )
     ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT.out.versions)

@@ -9,8 +9,9 @@ process BOWTIE2_ALIGN {
 
     input:
     tuple val(meta) , path(reads)
+    // original (I believe meta2 is wrong): 
+    // tuple val(meta2), path(index)
     path(index)
-    // original (I believe meta2 is wrong): tuple val(meta2), path(index)
     val   save_unaligned
     val   sort_bam
 
@@ -57,11 +58,11 @@ process BOWTIE2_ALIGN {
         | samtools $samtools_command $args2 --threads $task.cpus -o ${prefix}.${extension} -
 
     if [ -f ${prefix}.unmapped.fastq.1.gz ]; then
-        mv ${prefix}.unmapped.fastq.1.gz ${prefix}.unmapped_1.fastq.gz
+        mv ${prefix}.unmapped.fastq.1.gz ${prefix}.unmapped_R1.fastq.gz
     fi
 
     if [ -f ${prefix}.unmapped.fastq.2.gz ]; then
-        mv ${prefix}.unmapped.fastq.2.gz ${prefix}.unmapped_2.fastq.gz
+        mv ${prefix}.unmapped.fastq.2.gz ${prefix}.unmapped_R2.fastq.gz
     fi
 
     cat <<-END_VERSIONS > versions.yml

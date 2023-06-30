@@ -9,7 +9,8 @@ process SAMTOOLS_STATS {
 
     input:
     tuple val(meta), path(input), path(input_index)
-    tuple val(meta2), path(fasta)
+    // tuple val(meta2), path(fasta) // not used, and potentially wrong
+    path(fasta)
 
     output:
     tuple val(meta), path("*.stats"), emit: stats

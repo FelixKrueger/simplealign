@@ -12,7 +12,7 @@ workflow BAM_STATS_SAMTOOLS {
     // Felix: I believe this is not the correct input channel.ch_fasta   // channel: [ val(meta), path(fasta) ]
     // ch_fasta   // channel: [ val(meta), path(fasta) ]
     //This is:
-    ch_fasta   //channel: /path/to/reference.fasta
+    // ch_fasta   //channel: /path/to/reference.fasta
 
     main:
     ch_versions = Channel.empty()

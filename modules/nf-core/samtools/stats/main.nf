@@ -8,7 +8,8 @@ process SAMTOOLS_STATS {
         'biocontainers/samtools:1.17--h00cdaf9_0' }"
 
     input:
-    tuple val(meta), path(input), path(input_index), path(fasta)
+    tuple val(meta), path(input), path(input_index)
+    path (fasta)
     // tuple val(meta2), path(fasta) // not used, and potentially wrong
     
 

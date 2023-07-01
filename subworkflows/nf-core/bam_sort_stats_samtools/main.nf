@@ -9,7 +9,7 @@ include { BAM_STATS_SAMTOOLS } from '../bam_stats_samtools/main'
 workflow BAM_SORT_STATS_SAMTOOLS {
     take:
     ch_bam   // channel: [ val(meta), [ bam ] ]
-    ch_fasta // path(fasta)
+    ch_fasta // path(fasta) nod really required
 
     main:
 
@@ -43,7 +43,7 @@ workflow BAM_SORT_STATS_SAMTOOLS {
     bai      = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), [ bai ] ]
     csi      = SAMTOOLS_INDEX.out.csi          // channel: [ val(meta), [ csi ] ]
 
-    //stats    = BAM_STATS_SAMTOOLS.out.stats    // channel: [ val(meta), [ stats ] ]
+    stats    = BAM_STATS_SAMTOOLS.out.stats    // channel: [ val(meta), [ stats ] ]
     flagstat = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats = BAM_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
 

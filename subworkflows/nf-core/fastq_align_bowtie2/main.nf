@@ -16,9 +16,7 @@ workflow FASTQ_ALIGN_BOWTIE2 {
     main:
 
     ch_versions = Channel.empty()
-    // println("FastA file")
-    // println(ch_fasta)
-
+    
     //
     // Map reads with Bowtie2
     //

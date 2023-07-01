@@ -19,7 +19,7 @@ workflow BAM_STATS_SAMTOOLS {
 
     // ch_bam_bai.view()
     println("ch_bam_bai is:")
-    println(ch_bam_bai)
+    ch_bam_bai.view()
 
     // SAMTOOLS_STATS ( ch_bam_bai )
     // ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first()))

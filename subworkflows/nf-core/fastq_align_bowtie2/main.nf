@@ -23,7 +23,7 @@ workflow FASTQ_ALIGN_BOWTIE2 {
     BOWTIE2_ALIGN ( ch_reads, ch_index, save_unaligned, sort_bam )
     ch_versions = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
 
-    println(BOWTIE2_ALIGN.out.aligned)
+    // println(BOWTIE2_ALIGN.out.aligned)
 
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats

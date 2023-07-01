@@ -7,21 +7,21 @@ include { SAMTOOLS_IDXSTATS } from '../../../modules/nf-core/samtools/idxstats/m
 include { SAMTOOLS_FLAGSTAT } from '../../../modules/nf-core/samtools/flagstat/main'
 
 workflow BAM_STATS_SAMTOOLS {
+    
     take:
     ch_bam_bai // channel: [ val(meta), path(bam), path(bai) ]
     // Felix: I believe this is not the correct input channel.ch_fasta   // channel: [ val(meta), path(fasta) ]
-    // ch_fasta   // channel: [ val(meta), path(fasta) ]
-    //This is:
+    // This is:
     // ch_fasta   //channel: /path/to/reference.fasta
 
     main:
     ch_versions = Channel.empty()
 
     // ch_bam_bai.view()
-    // println("ch_fasta is:")
-    // println(ch_fasta)
+    println("ch_bam_bai is:")
+    println(ch_bam_bai)
 
-    SAMTOOLS_STATS ( ch_bam_bai, [] )
+    SAMTOOLS_STATS ( ch_bam_bai )
     ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first()))
 
     SAMTOOLS_FLAGSTAT ( ch_bam_bai )

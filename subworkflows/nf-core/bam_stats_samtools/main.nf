@@ -18,11 +18,11 @@ workflow BAM_STATS_SAMTOOLS {
     ch_versions = Channel.empty()
 
     // ch_bam_bai.view()
-    println("ch_fasta is:")
-    println(ch_fasta)
+    // println("ch_fasta is:")
+    // println(ch_fasta)
 
-    SAMTOOLS_STATS ( ch_bam_bai, [] )
-    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first()))
+    // SAMTOOLS_STATS ( ch_bam_bai, [] )
+    // ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first()))
 
     SAMTOOLS_FLAGSTAT ( ch_bam_bai )
     ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT.out.versions.first())

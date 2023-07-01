@@ -3,7 +3,7 @@
 //
 
 include { BOWTIE2_ALIGN           } from '../../../modules/nf-core/bowtie2/align/main'
-include { BAM_SORT_STATS_SAMTOOLS } from '../bam_sort_stats_samtools/main'
+// include { BAM_SORT_STATS_SAMTOOLS } from '../bam_sort_stats_samtools/main'
 
 workflow FASTQ_ALIGN_BOWTIE2 {
     take:
@@ -30,8 +30,8 @@ workflow FASTQ_ALIGN_BOWTIE2 {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    // BAM_SORT_STATS_SAMTOOLS ( BOWTIE2_ALIGN.out.aligned, ch_fasta )
-    // ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
+    //BAM_SORT_STATS_SAMTOOLS ( BOWTIE2_ALIGN.out.aligned, ch_fasta )
+    //ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
     emit:
     bam_orig         = BOWTIE2_ALIGN.out.aligned      // channel: [ val(meta), aligned ]

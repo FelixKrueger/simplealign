@@ -12,7 +12,7 @@ workflow BAM_STATS_SAMTOOLS {
     ch_bam_bai    // channel: [ val(meta), path(bam), path(bai) ]
     // Felix: I believe this is not the correct input channel.ch_fasta   // channel: [ val(meta), path(fasta) ]
     // This is:
-    // ch_fasta   //channel: /path/to/reference.fasta
+    ch_fasta   //channel: /path/to/reference.fasta
 
     main:
     ch_versions = Channel.empty()
@@ -21,7 +21,7 @@ workflow BAM_STATS_SAMTOOLS {
     // println("ch_bam_bai is:")
     // ch_bam_bai.view() //works, tested it
 
-    SAMTOOLS_STATS ( ch_bam_bai )
+    SAMTOOLS_STATS ( ch_bam_bai, ch_fasta )
     // ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first()))
 
     SAMTOOLS_FLAGSTAT ( ch_bam_bai )

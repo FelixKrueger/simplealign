@@ -9,8 +9,8 @@ process SAMTOOLS_STATS {
 
     input:
     tuple val(meta), path(input), path(input_index)
-    // path fasta  // () will make this into a tuple!
-    tuple val(meta2), path(fasta) // not used, and potentially wrong
+    // () will make this into a tuple!
+    path fasta  // tuple val(meta2), path(fasta) // not used, and potentially wrong
     
 
     output:

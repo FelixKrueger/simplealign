@@ -146,7 +146,13 @@
                     "fa_icon": "fas fa-save",
                     "description": "Where possible, save unaligned reads from either STAR, HISAT2 or Salmon to the results directory.",
                     "help_text": "This may either be in the form of FastQ or BAM files depending on the options available for that particular tool."
+                },
+                "extra_bowtie2_align_args": {
+                    "type": "string",
+                    "description": "Extra arguments to pass to Bowtie2 alignment command in addition to defaults defined by the pipeline.",
+                    "fa_icon": "fas fa-plus"
                 }
+                
            }
         },
         "process_skipping_options": {

@@ -104,15 +104,6 @@ workflow SIMPLEALIGN {
 
 
     //
-    // MODULE: Run FastQC
-    //
-    // FASTQC (
-    //     INPUT_CHECK.out.reads
-    // )
-    // ch_versions = ch_versions.mix(FASTQC.out.versions.first())
-
-    
-    //
     // SUBWORKFLOW: Alignment with Bowtie2 & BAM QC
     //
 
@@ -160,12 +151,13 @@ workflow SIMPLEALIGN {
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    // ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.zip.collect{it[1]}.ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.log.collect{it[1]}.ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.zip.collect{it[1]}.ifEmpty([]))
 
     MULTIQC (
         ch_multiqc_files.collect(),
         ch_multiqc_config.toList(),
-        ch_multiqc_custom_config.toList(),
+        ch_multiqc_custom_config.toList().ifEmpty([]),
         ch_multiqc_logo.toList()
     )
     multiqc_report = MULTIQC.out.report.toList()

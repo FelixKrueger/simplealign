@@ -152,16 +152,16 @@ workflow SIMPLEALIGN {
     methods_description    = WorkflowSimplealign.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
     ch_methods_description = Channel.value(methods_description)
     
-    ch_multiqc_files = Channel.empty()
-    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_BOWTIE2.out.log.collect{it[1]}.ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_BOWTIE2.out.zip.collect{it[1]}.ifEmpty([]))
-    ch_multiqc_files.view()   
+    // ch_multiqc_files = Channel.empty()
+    // ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    // ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+    // ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    // ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
+    // ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
+    // ch_multiqc_files = ch_multiqc_files.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
+    // ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_BOWTIE2.out.log.collect{it[1]}.ifEmpty([]))
+    // ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_BOWTIE2.out.zip.collect{it[1]}.ifEmpty([]))
+    // ch_multiqc_files.view()   
 
 
     MULTIQC (
@@ -173,14 +173,15 @@ workflow SIMPLEALIGN {
         ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'),
         ch_multiqc_logo.collect().ifEmpty([]),
         ch_fastqc_raw_multiqc.collect{it[1]}.ifEmpty([]),
-        ch_fastqc_trim_multiqc.collect{it[1]}.ifEmpty([])
+        ch_fastqc_trim_multiqc.collect{it[1]}.ifEmpty([]),
+        ch_trim_log_multiqc.collect{it[1]}.ifEmpty([]),
+        ch_samtools_stats.collect{it[1]}.ifEmpty([]),
+        ch_samtools_flagstat.collect{it[1]}.ifEmpty([]),
+        ch_samtools_idxstats.collect{it[1]}.ifEmpty([])
         // ch_multiqc_files.collect(),
         // ch_multiqc_config.toList(),
         // ch_multiqc_custom_config.toList().ifEmpty([]),
         // ch_multiqc_logo.collect().ifEmpty([]),
-        // ch_samtools_stats.collect{it[1]}.ifEmpty([]),
-        // ch_samtools_flagstat.collect{it[1]}.ifEmpty([]),
-        // ch_samtools_idxstats.collect{it[1]}.ifEmpty([])
     )
     multiqc_report = MULTIQC.out.report.toList()
 }

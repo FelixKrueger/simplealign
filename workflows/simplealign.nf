@@ -97,9 +97,14 @@ workflow SIMPLEALIGN {
         false,                      // with_umi          // boolean: true/false
         true,                       // skip_umi_extract  // boolean: true/false
         params.skip_trimming,
-        1,                           // umi_discard_read  // integer: 0, 1 or 2
+        1,                          // umi_discard_read  // integer: 0, 1 or 2
         1000                        // min_trimmed_reads // integer: > 0
     ) 
+    ch_filtered_reads      = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads
+    ch_fastqc_raw_multiqc  = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip
+    ch_fastqc_trim_multiqc = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip
+    ch_trim_log_multiqc    = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log
+    ch_trim_read_count     = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_read_count
     ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.versions)
 
 
@@ -143,10 +148,10 @@ workflow SIMPLEALIGN {
     //
     workflow_summary    = WorkflowSimplealign.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
-
+    
     methods_description    = WorkflowSimplealign.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
     ch_methods_description = Channel.value(methods_description)
-
+    
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
@@ -160,13 +165,22 @@ workflow SIMPLEALIGN {
 
 
     MULTIQC (
-        ch_multiqc_files.collect(),
-        ch_multiqc_config.toList(),
-        ch_multiqc_custom_config.toList().ifEmpty([]),
+        ch_multiqc_config,
+        ch_multiqc_custom_config.collect().ifEmpty([]),
+        CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect(),
+        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
+        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
+        ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'),
         ch_multiqc_logo.collect().ifEmpty([]),
-        ch_samtools_stats.collect{it[1]}.ifEmpty([]),
-        ch_samtools_flagstat.collect{it[1]}.ifEmpty([]),
-        ch_samtools_idxstats.collect{it[1]}.ifEmpty([])
+        ch_fastqc_raw_multiqc.collect{it[1]}.ifEmpty([]),
+        ch_fastqc_trim_multiqc.collect{it[1]}.ifEmpty([])
+        // ch_multiqc_files.collect(),
+        // ch_multiqc_config.toList(),
+        // ch_multiqc_custom_config.toList().ifEmpty([]),
+        // ch_multiqc_logo.collect().ifEmpty([]),
+        // ch_samtools_stats.collect{it[1]}.ifEmpty([]),
+        // ch_samtools_flagstat.collect{it[1]}.ifEmpty([]),
+        // ch_samtools_idxstats.collect{it[1]}.ifEmpty([])
     )
     multiqc_report = MULTIQC.out.report.toList()
 }

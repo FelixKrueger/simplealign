@@ -158,7 +158,10 @@ workflow SIMPLEALIGN {
         ch_multiqc_files.collect(),
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList().ifEmpty([]),
-        ch_multiqc_logo.toList()
+        ch_multiqc_logo.collect().ifEmpty([]),
+        ch_samtools_stats.collect{it[1]}.ifEmpty([]),
+        ch_samtools_flagstat.collect{it[1]}.ifEmpty([]),
+        ch_samtools_idxstats.collect{it[1]}.ifEmpty([])
     )
     multiqc_report = MULTIQC.out.report.toList()
 }

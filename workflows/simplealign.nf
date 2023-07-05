@@ -162,7 +162,7 @@ workflow SIMPLEALIGN {
     // ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_BOWTIE2.out.log.collect{it[1]}.ifEmpty([]))
     // ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_BOWTIE2.out.zip.collect{it[1]}.ifEmpty([]))
     // ch_multiqc_files.view()   
-
+    ch_fastqc_raw_multiqc.collect().ifEmpty([]).view()
 
     MULTIQC (
         ch_multiqc_config,

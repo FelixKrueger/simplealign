@@ -171,9 +171,9 @@
                     "description": "Skip FastQC.",
                     "fa_icon": "fas fa-fast-forward"
                 },
-                "skip_trim_galore": {
+                "skip_trimming": {
                     "type": "boolean",
-                    "description": "Skip Trim Galore.",
+                    "description": "Skip trimming with Trim Galore.",
                     "fa_icon": "fas fa-fast-forward"
                 },
                 "skip_multiqc": {

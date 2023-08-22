@@ -172,11 +172,11 @@ workflow SIMPLEALIGN {
     ch_fastqc_raw_multiqc.collect{it[1]}.ifEmpty([]).view()
 
     // ::::::::::::::::: FROM SEQC :::::::::::::::::::
-    workflow_summary    = WorkflowSeqc.paramsSummaryMultiqc(workflow, summary_params)
-    ch_workflow_summary = Channel.value(workflow_summary)
+    // workflow_summary    = WorkflowSeqc.paramsSummaryMultiqc(workflow, summary_params)
+    // ch_workflow_summary = Channel.value(workflow_summary)
 
-    methods_description    = WorkflowSeqc.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
-    ch_methods_description = Channel.value(methods_description)
+    // methods_description    = WorkflowSeqc.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
+    // ch_methods_description = Channel.value(methods_description)
 
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))

@@ -146,6 +146,13 @@ workflow SIMPLEALIGN {
     //
     // MODULE: MultiQC
     //
+
+    // input:
+    // path  multiqc_files, stageAs: "?/*"
+    // path(multiqc_config)
+    // path(extra_multiqc_config)
+    // path(multiqc_logo)
+
     workflow_summary    = WorkflowSimplealign.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
     
@@ -164,25 +171,47 @@ workflow SIMPLEALIGN {
     // ch_multiqc_files.view()   
     ch_fastqc_raw_multiqc.collect{it[1]}.ifEmpty([]).view()
 
+    // ::::::::::::::::: FROM SEQC :::::::::::::::::::
+    workflow_summary    = WorkflowSeqc.paramsSummaryMultiqc(workflow, summary_params)
+    ch_workflow_summary = Channel.value(workflow_summary)
+
+    methods_description    = WorkflowSeqc.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
+    ch_methods_description = Channel.value(methods_description)
+
+    ch_multiqc_files = Channel.empty()
+    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
+
     MULTIQC (
-        ch_multiqc_config,
-        ch_multiqc_custom_config.collect().ifEmpty([]),
-        CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect(),
-        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
-        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
-        ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'),
-        ch_multiqc_logo.collect().ifEmpty([]),
-        ch_fastqc_raw_multiqc.collect{it[1]}.ifEmpty([]),
-        ch_fastqc_trim_multiqc.collect{it[1]}.ifEmpty([]),
-        ch_trim_log_multiqc.collect{it[1]}.ifEmpty([]),
-        ch_samtools_stats.collect{it[1]}.ifEmpty([]),
-        ch_samtools_flagstat.collect{it[1]}.ifEmpty([]),
-        ch_samtools_idxstats.collect{it[1]}.ifEmpty([])
-        // ch_multiqc_files.collect(),
-        // ch_multiqc_config.toList(),
-        // ch_multiqc_custom_config.toList().ifEmpty([]),
-        // ch_multiqc_logo.collect().ifEmpty([]),
+        ch_multiqc_files.collect(),
+        ch_multiqc_config.toList(),
+        ch_multiqc_custom_config.toList(),
+        ch_multiqc_logo.toList()
     )
+    
+    // ::::::::::::::::: FROM SEQC ::::::::::::::::::
+
+    // MULTIQC (
+    //     ch_multiqc_config,
+    //     ch_multiqc_custom_config.collect().ifEmpty([]),
+    //     CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect(),
+    //     ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
+    //     ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
+    //     ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'),
+    //     ch_multiqc_logo.collect().ifEmpty([]),
+    //     ch_fastqc_raw_multiqc.collect{it[1]}.ifEmpty([]),
+    //     ch_fastqc_trim_multiqc.collect{it[1]}.ifEmpty([]),
+    //     ch_trim_log_multiqc.collect{it[1]}.ifEmpty([]),
+    //     ch_samtools_stats.collect{it[1]}.ifEmpty([]),
+    //     ch_samtools_flagstat.collect{it[1]}.ifEmpty([]),
+    //     ch_samtools_idxstats.collect{it[1]}.ifEmpty([])
+    //     // ch_multiqc_files.collect(),
+    //     // ch_multiqc_config.toList(),
+    //     // ch_multiqc_custom_config.toList().ifEmpty([]),
+    //     // ch_multiqc_logo.collect().ifEmpty([]),
+    // )
     multiqc_report = MULTIQC.out.report.toList()
 }
 
